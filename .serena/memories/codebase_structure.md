@@ -1,0 +1,5 @@
+- `agenda_genie/`: Main source code for the application.
+  - `main.py`: The entry point of the application.
+- `tests/`: Contains all the test code.
+- `requirements.txt`: Lists the Python project dependencies.
+- `.venv/`: Python virtual environment directory (ignored by git).

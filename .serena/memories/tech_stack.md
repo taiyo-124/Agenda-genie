@@ -1,0 +1,5 @@
+- **Language**: Python 3.6+
+- **Dependency Management**: pip with `requirements.txt`
+- **Code Quality (Linting & Formatting)**: Ruff
+- **Type Checking**: Mypy
+- **Testing**: pytest

@@ -1,0 +1,3 @@
+- **Style Guide**: PEP 8 (enforced by Ruff).
+- **Docstrings**: Google Style.
+- **Type Hints**: Actively used to improve code readability and safety.
