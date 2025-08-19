@@ -1,4 +1,11 @@
+# 環境変数
 .env
+
+# python
 .venv/
 .mypy_cache/
 .ruff_cache/
+agenda_genie/__pycache__
+
+# json 
+*.json
