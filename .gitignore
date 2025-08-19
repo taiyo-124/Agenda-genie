@@ -5,7 +5,11 @@
 .venv/
 .mypy_cache/
 .ruff_cache/
+<<<<<<< HEAD
 agenda_genie/__pycache__/
+=======
+agenda_genie/__pycache__
+>>>>>>> 288c5a4 (chore: .gitignoreに__pycache__を追加)
 
 # jsonファイル
 *.json
