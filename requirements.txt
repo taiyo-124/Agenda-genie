@@ -16,3 +16,7 @@ google-generativeai
 
 # .env support
 python-dotenv
+
+# LINE Bot
+Flask
+line-bot-sdk
