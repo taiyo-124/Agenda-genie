@@ -5,12 +5,7 @@
 .venv/
 .mypy_cache/
 .ruff_cache/
-<<<<<<< HEAD
-agenda_genie/__pycache__
+agenda_genie/__pycache__/
 
-# json 
+# jsonファイル
 *.json
-=======
-token.json
-credentials.json
->>>>>>> c9f1bcc (feat: LINEbotとGoogleカレンダーの連携機能を実装)
