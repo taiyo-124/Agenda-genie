@@ -6,3 +6,7 @@ mypy
 
 # テスト
 pytest
+
+# Google Calendar API
+google-api-python-client
+google-auth-oauthlib
