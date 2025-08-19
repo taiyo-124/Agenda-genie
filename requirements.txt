@@ -10,3 +10,9 @@ pytest
 # Google Calendar API
 google-api-python-client == 1.7.2
 google-auth-oauthlib == 0.4.1
+
+# Gemini API
+google-generativeai
+
+# .env support
+python-dotenv

@@ -41,7 +41,7 @@ class GoogleCalendarManager:
                 # credentials.josonから認証フローを作成
                 flow = InstalledAppFlow.from_client_secrets_file(credentials_file, SCOPES)
                 
-                # ユーザーにブラウザでの認証を要求
+                # ユーザーにコンソールでの認証を要求
                 creds = flow.run_console()
         
             with open(token_file, 'w') as token:
