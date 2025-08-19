@@ -8,5 +8,5 @@ mypy
 pytest
 
 # Google Calendar API
-google-api-python-client
-google-auth-oauthlib
+google-api-python-client == 1.7.2
+google-auth-oauthlib == 0.4.1
