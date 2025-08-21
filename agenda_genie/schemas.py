@@ -29,6 +29,20 @@ class CalendarEvent:
     end_time: datetime
     description: str | None = None  # 説明は任意項目とする
 
+@dataclass
+class Search_event_info:
+    """Googleカレンダーのイベントを検索するための情報を表現するデータクラス
+    
+    Attributes:
+        time_min: 検索する時間帯の開始時刻
+        time_max: 検索する時間帯の終了時刻
+        key_word: イベントの検索クエリ
+    """
+    
+    time_min: datetime | None = None
+    time_max: datetime | None = None
+    key_word: str
+
 class ActionType(Enum):
     """ユーザーが要求している操作の種類"""
     CREATE = "create" # 作成
