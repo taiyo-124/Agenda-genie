@@ -11,7 +11,7 @@ from pathlib import Path
 
 import google.generativeai as genai
 
-from .schemas import CalendarEvent
+from .schemas import CalendarEvent, ParsedResult, ActionType
 
 
 class GeminiParser:
@@ -46,15 +46,15 @@ class GeminiParser:
             raise FileNotFoundError(f"プロンプトファイルが見つかりません: {prompt_template_path}")
 
 
-    def parse_event_text(self, text: str) -> CalendarEvent | None:
+    def parse_event_text(self, text: str) -> ParsedResult | None:
         """
-        与えられたテキストからイベント情報を抽出し、CalendarEventオブジェクトを生成します。
+        与えられたテキストからユーザーの意図とイベント情報を抽出し、ParsedResultオブジェクトを生成します。
 
         Args:
             text: ユーザーによって入力された自然言語のテキスト。
 
         Returns:
-            抽出された情報を持つCalendarEventオブジェクト。抽出に失敗した場合はNone。
+            抽出された情報を持つParsedResultオブジェクト。抽出に失敗した場合はNone。
         """
         now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M')
 
@@ -63,23 +63,43 @@ class GeminiParser:
 
         try:
             response = self.model.generate_content(prompt)
-            json_text = response.text.strip().replace("```json", "").replace("```", "").strip()
+            # Geminiからの応答テキストをクリーンアップ
+            json_text = response.text.strip().lstrip("```json").rstrip("```").strip()
             
-            if "incomplete" in json_text:
-                print("日時が不明確なため、イベントを生成できませんでした。")
-                return None
+            # JSON文字列をPythonの辞書に変換
+            parsed_data = json.loads(json_text)
+            
+            action_str = parsed_data.get("action")
+            if not action_str:
+                raise ValueError("JSON応答に'action'キーが含まれていません。")
 
-            event_data = json.loads(json_text)
+            action = ActionType(action_str)
 
-            return CalendarEvent(
-                title=event_data["title"],
-                start_time=datetime.datetime.fromisoformat(event_data["start_time"]),
-                end_time=datetime.datetime.fromisoformat(event_data["end_time"]),
-                description=event_data.get("description"),
-            )
+            if action == ActionType.CREATE:
+                event_data = parsed_data["event"]
+                event = CalendarEvent(
+                    title=event_data["title"],
+                    start_time=datetime.datetime.fromisoformat(event_data["start_time"]),
+                    end_time=datetime.datetime.fromisoformat(event_data["end_time"]),
+                    description=event_data.get("description"),
+                )
+                return ParsedResult(action=action, event=event)
+            
+            elif action == ActionType.DELETE:
+                search_info = parsed_data["event"]
+                return ParsedResult(action=action, event=search_info)
+            
+            elif action in [ActionType.READ, ActionType.TALK]:
+                original_text = parsed_data.get("original_text", text)
+                return ParsedResult(action=action, original_text=original_text)
+
+            else:
+                # 未知のactionタイプの場合は、TALKとして扱う
+                return ParsedResult(action=ActionType.TALK, original_text=text)
+
         except (json.JSONDecodeError, KeyError, ValueError) as e:
             print(f"イベント情報の解析中にエラーが発生しました: {e}")
-            # エラー発生時にAIからの生の応答も表示するとデバッグしやすい
             if 'response' in locals():
                 print(f"Geminiからの応答: {response.text}")
-            return None
+            # 解析に失敗した場合は、雑談として扱う
+            return ParsedResult(action=ActionType.TALK, original_text=text)

@@ -37,7 +37,7 @@ LINEのチャットインターフェースを通じて、自然な対話形式�
 
 ユーザーの自然な文章をGemini APIで解析し、`CalendarEvent`オブジェクトに変換する`GeminiParser`クラスを`agenda_genie/natural_language_parser.py`に実装しました。プロンプトは外部ファイル (`prompts/parse_event.md`) で管理しています。
 
-### ステップ4: LINE Botインターフェースの構築
+### ステップ4: LINE Botインターフェースの構築 (実装済み)
 
 最後に、これらすべての機能を統合します。LINEからのメッセージを受信し、AIモジュールで解析し、Googleカレンダー連携モジュールで予定を登録し、最終的にLINEユーザーへ応答メッセージを返す、一連の流れを完成させます。
 
@@ -64,71 +64,6 @@ LINEのチャットインターフェースを通じて、自然な対話形式�
     -   ローカル環境でサーバーを起動し、`ngrok` 等を用いて一時的な公開URLを取得します。
     -   LINE DevelopersコンソールにWebhook URLを設定し、実際にLINEアプリからメッセージを送信して動作を確認します。
 
-## セットアップ
+### ステップ5: 機能拡張
 
-### 1. リポジトリのクローン
-
-```bash
-git clone https://github.com/taiyo-124/Agenda-genie.git
-cd Agenda-genie
-```
-
-### 2. 仮想環境の作成と有効化
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-```
-
-### 3. 依存ライブラリのインストール
-
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Google Calendar API の設定
-
-1. Google Cloud Platformでプロジェクトを作成し、Google Calendar APIを有効にします。
-2. 「APIとサービス」>「認証情報」に移動し、「認証情報を作成」から「OAuth 2.0 クライアント ID」を選択します。
-3. アプリケーションの種類で「デスクトップアプリ」を選択し、名前を付けて作成します。
-4. 作成された認証情報のJSONファイルをダウンロードし、プロジェクトのルートディレクトリに`credentials.json`という名前で保存します。
-
-### 5. Gemini APIキーの設定
-
-1. [Google AI Studio](https://aistudio.google.com/app/apikey)にアクセスし、APIキーを取得します。
-2. プロジェクトのルートディレクトリに`.env`という名前のファイルを作成します。
-3. `.env`ファイルに以下の内容を記述し、ご自身のAPIキーに置き換えてください。
-
-```
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-```
-
-## 使い方 (CLIでのテスト)
-
-セットアップ完了後、コマンドラインからアプリケーションの動作をテストできます。
-
-### 初回認証
-
-最初にGoogleカレンダー連携機能を使う際、Googleアカウントでの認証が必要です。以下のコマンドを実行すると、コンソールに認証用URLが表示されます。
-
-```bash
-python -m agenda_genie.main
-```
-
-URLにアクセスしてアカウントを承認すると、コンソールにコードを貼り付けるよう求められます。認証が成功すると、`token.json`というファイルが生成され、次回以降は自動で認証されます。
-
-### 自然言語解析機能のテスト
-
-`GeminiParser`が様々な文章を正しく解析できるかテストするには、`--test-parser`フラグを使用します。
-
-```bash
-python -m agenda_genie.main --test-parser
-```
-
-### イベント登録のテスト
-
-コマンドライン引数に予定を記述することで、解析からカレンダー登録までの一連の流れをテストできます。
-
-```bash
-python -m agenda_genie.main "来週の金曜19時から友人との食事"
-```
+これまで予定の追加しかできなかったが、予定の削除機能を実装した。
